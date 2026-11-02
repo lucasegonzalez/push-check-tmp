@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+*.log
+.env
+
+# Capturas de los tableros: datos institucionales, no se publican
+local/blobs/*
+!local/blobs/.gitkeep

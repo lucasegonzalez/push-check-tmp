@@ -1,0 +1,503 @@
+{
+  "$schema": "conceptos/v2",
+  "norma": "ISO/IEC 11179-1 (registro de metadatos): cada concepto tiene etiqueta, definición, dominio de valores y sinónimos.",
+  "descripcion": "Diccionario de conceptos canónicos. Las fuentes conservan sus nombres; acá se declara qué significan.",
+  "estados": {
+    "propuesto": "Redactado sin validación del dueño del dato.",
+    "validado": "Confirmado por el dueño del dato."
+  },
+  "conceptos": {
+    "legajo_alumno": {
+      "etiqueta": "Legajo del alumno",
+      "definicion": "Identificador único del alumno dentro de la universidad.",
+      "dominio": "Entero positivo",
+      "tipo": "Número",
+      "sinonimos": [
+        "legajo",
+        "al_legajo",
+        "legajo_name"
+      ],
+      "estado": "propuesto"
+    },
+    "carrera": {
+      "etiqueta": "Carrera",
+      "definicion": "Programa de grado o pregrado en el que está inscripto el alumno.",
+      "dominio": "Texto; debe coincidir con maestros.carreras.nombre",
+      "tipo": "Texto",
+      "sinonimos": [
+        "carrera",
+        "carrera_name",
+        "carreraok",
+        "nombre_carrera"
+      ],
+      "estado": "propuesto"
+    },
+    "sede": {
+      "etiqueta": "Sede",
+      "definicion": "Sede física donde se dicta o se administra la carrera.",
+      "dominio": "Texto; debe coincidir con maestros.sedes.nombre",
+      "tipo": "Texto",
+      "sinonimos": [
+        "sede",
+        "sede_name",
+        "sedes.nombre"
+      ],
+      "estado": "propuesto"
+    },
+    "plan": {
+      "etiqueta": "Plan de estudios",
+      "definicion": "Versión del plan de estudios vigente para la carrera del alumno.",
+      "dominio": "Texto",
+      "tipo": "Texto",
+      "sinonimos": [
+        "plan",
+        "plan_name",
+        "nombre_plan"
+      ],
+      "estado": "propuesto"
+    },
+    "facultad": {
+      "etiqueta": "Facultad",
+      "definicion": "Unidad académica a la que pertenece la carrera.",
+      "dominio": "Texto",
+      "tipo": "Texto",
+      "sinonimos": [
+        "facultad",
+        "facultad_name"
+      ],
+      "estado": "propuesto"
+    },
+    "periodo": {
+      "etiqueta": "Período académico",
+      "definicion": "Período lectivo al que corresponde el registro.",
+      "dominio": "Texto AAAA + cuatrimestre",
+      "tipo": "Texto",
+      "sinonimos": [
+        "periodo",
+        "period",
+        "periodos.nombre",
+        "cuatrimestre"
+      ],
+      "estado": "propuesto"
+    },
+    "fecha_pago": {
+      "etiqueta": "Fecha de pago",
+      "definicion": "Fecha en la que se registró efectivamente el pago.",
+      "dominio": "Fecha (no futura)",
+      "tipo": "Fecha",
+      "sinonimos": [
+        "fecha_pago"
+      ],
+      "estado": "propuesto"
+    },
+    "fecha_comprobante": {
+      "etiqueta": "Fecha del comprobante",
+      "definicion": "Fecha de emisión del comprobante.",
+      "dominio": "Fecha",
+      "tipo": "Fecha",
+      "sinonimos": [
+        "fecha_comp",
+        "fecha"
+      ],
+      "estado": "propuesto"
+    },
+    "fecha_cancelacion": {
+      "etiqueta": "Fecha de cancelación",
+      "definicion": "Fecha en la que el comprobante quedó cancelado.",
+      "dominio": "Fecha; vacío si sigue impago",
+      "tipo": "Fecha",
+      "sinonimos": [
+        "fecha_comp_cancela",
+        "fecha_cancela"
+      ],
+      "estado": "propuesto"
+    },
+    "comprobante_id": {
+      "etiqueta": "Identificador de comprobante",
+      "definicion": "Código interno que identifica la serie o tipo de comprobante.",
+      "dominio": "Texto corto; puede traer espacios",
+      "tipo": "Texto",
+      "sinonimos": [
+        "comp_id"
+      ],
+      "estado": "propuesto"
+    },
+    "comprobante_nro": {
+      "etiqueta": "Número de comprobante",
+      "definicion": "Número visible del comprobante. Es identificador, no cantidad.",
+      "dominio": "Texto numérico; conservar ceros a la izquierda",
+      "tipo": "Texto",
+      "sinonimos": [
+        "nro_comp",
+        "comprobante"
+      ],
+      "estado": "propuesto"
+    },
+    "comprobante_tipo": {
+      "etiqueta": "Tipo de comprobante",
+      "definicion": "Naturaleza del comprobante emitido.",
+      "dominio": "Factura, recibo, nota de crédito u otro",
+      "tipo": "Texto",
+      "sinonimos": [
+        "tipo",
+        "tipo_comp"
+      ],
+      "estado": "propuesto"
+    },
+    "comprobante_concepto": {
+      "etiqueta": "Concepto facturado",
+      "definicion": "Concepto por el que se emitió el comprobante.",
+      "dominio": "Texto libre",
+      "tipo": "Texto",
+      "sinonimos": [
+        "comp_name",
+        "concepto"
+      ],
+      "estado": "propuesto"
+    },
+    "comprobante_cancela": {
+      "etiqueta": "Comprobante de cancelación",
+      "definicion": "Comprobante que cancela al original.",
+      "dominio": "Texto; vacío si no hay cancelación",
+      "tipo": "Texto",
+      "sinonimos": [
+        "comp_cancela"
+      ],
+      "estado": "propuesto"
+    },
+    "comprobante_interno": {
+      "etiqueta": "Número interno de cancelación",
+      "definicion": "Número interno usado por el sistema para registrar la cancelación.",
+      "dominio": "Entero",
+      "tipo": "Número",
+      "sinonimos": [
+        "interno_cancelado",
+        "nro_interno"
+      ],
+      "estado": "propuesto"
+    },
+    "medio_pago": {
+      "etiqueta": "Medio o valor de pago",
+      "definicion": "Medio con el que se realizó el pago.",
+      "dominio": "Texto libre (efectivo, transferencia, tarjeta)",
+      "tipo": "Texto",
+      "sinonimos": [
+        "valor_name"
+      ],
+      "estado": "propuesto"
+    },
+    "importe_cobrado": {
+      "etiqueta": "Importe cobrado",
+      "definicion": "Monto efectivamente cobrado en el comprobante.",
+      "dominio": "Decimal ≥ 0 en pesos argentinos",
+      "tipo": "Número",
+      "sinonimos": [
+        "importe_cobrado"
+      ],
+      "estado": "propuesto"
+    },
+    "monto": {
+      "etiqueta": "Monto",
+      "definicion": "Importe monetario del registro contable.",
+      "dominio": "Decimal en pesos argentinos",
+      "tipo": "Número",
+      "sinonimos": [
+        "MONTO",
+        "monto",
+        "MONTO TOTAL (estimado)"
+      ],
+      "estado": "propuesto"
+    },
+    "area_negocio": {
+      "etiqueta": "Área de negocio",
+      "definicion": "Área responsable del registro o del flujo.",
+      "dominio": "Texto",
+      "tipo": "Texto",
+      "sinonimos": [
+        "AREA",
+        "area",
+        "AREA_FILTRO"
+      ],
+      "estado": "propuesto"
+    },
+    "cuenta_contable": {
+      "etiqueta": "Cuenta contable",
+      "definicion": "Cuenta del plan contable a la que se imputa el movimiento.",
+      "dominio": "Texto; debe existir en el plan de cuentas",
+      "tipo": "Texto",
+      "sinonimos": [
+        "CUENTA",
+        "cuenta"
+      ],
+      "estado": "propuesto"
+    },
+    "mes": {
+      "etiqueta": "Mes",
+      "definicion": "Mes al que corresponde el registro.",
+      "dominio": "Texto MM-AAAA",
+      "tipo": "Texto",
+      "sinonimos": [
+        "MES",
+        "mes"
+      ],
+      "estado": "propuesto"
+    },
+    "etapa": {
+      "etiqueta": "Etapa del flujo",
+      "definicion": "Etapa del proceso donde se encuentra el monto.",
+      "dominio": "Texto",
+      "tipo": "Texto",
+      "sinonimos": [
+        "ETAPA",
+        "etapa"
+      ],
+      "estado": "propuesto"
+    },
+    "origen": {
+      "etiqueta": "Origen",
+      "definicion": "Nodo de origen del flujo.",
+      "dominio": "Texto",
+      "tipo": "Texto",
+      "sinonimos": [
+        "ORIGEN",
+        "origen"
+      ],
+      "estado": "propuesto"
+    },
+    "destino": {
+      "etiqueta": "Destino",
+      "definicion": "Nodo de destino del flujo.",
+      "dominio": "Texto",
+      "tipo": "Texto",
+      "sinonimos": [
+        "DESTINO",
+        "destino"
+      ],
+      "estado": "propuesto"
+    },
+    "tipo_monto": {
+      "etiqueta": "Tipo de monto",
+      "definicion": "Naturaleza del monto registrado en el flujo.",
+      "dominio": "Texto (previsto, comprometido, pagado)",
+      "tipo": "Texto",
+      "sinonimos": [
+        "TIPO_MONTO"
+      ],
+      "estado": "propuesto"
+    },
+    "factura_nro": {
+      "etiqueta": "Número de factura",
+      "definicion": "Número de la factura del proveedor.",
+      "dominio": "Texto numérico",
+      "tipo": "Texto",
+      "sinonimos": [
+        "FACTURA",
+        "factura"
+      ],
+      "estado": "propuesto"
+    },
+    "orden_pago": {
+      "etiqueta": "Orden de pago",
+      "definicion": "Número de la orden de pago asociada.",
+      "dominio": "Texto numérico",
+      "tipo": "Texto",
+      "sinonimos": [
+        "NRO OP",
+        "nro_op"
+      ],
+      "estado": "propuesto"
+    },
+    "problema_detectado": {
+      "etiqueta": "Problema detectado",
+      "definicion": "Observación sobre el problema encontrado en la factura.",
+      "dominio": "Texto libre",
+      "tipo": "Texto",
+      "sinonimos": [
+        "PROBLEMA DETECTADO"
+      ],
+      "estado": "propuesto"
+    }
+  },
+  "fuentes": {
+    "KPiS Cobranzas": {
+      "archivo": "KPiS Cobranzas_Serie temporal a partir del 2024_Tabla.csv",
+      "proyecto": "cobranzas",
+      "campos": [
+        {
+          "nombre": "legajo",
+          "tipo": "Número",
+          "concepto": "legajo_alumno"
+        },
+        {
+          "nombre": "fecha_pago",
+          "tipo": "Fecha",
+          "concepto": "fecha_pago"
+        },
+        {
+          "nombre": "comp_id",
+          "tipo": "Texto",
+          "concepto": "comprobante_id"
+        },
+        {
+          "nombre": "nro_comp",
+          "tipo": "Texto",
+          "concepto": "comprobante_nro"
+        },
+        {
+          "nombre": "tipo",
+          "tipo": "Texto",
+          "concepto": "comprobante_tipo"
+        },
+        {
+          "nombre": "comp_name",
+          "tipo": "Texto",
+          "concepto": "comprobante_concepto"
+        },
+        {
+          "nombre": "comp_cancela",
+          "tipo": "Texto",
+          "concepto": "comprobante_cancela"
+        },
+        {
+          "nombre": "fecha_comp_cancela",
+          "tipo": "Fecha",
+          "concepto": "fecha_cancelacion"
+        },
+        {
+          "nombre": "carrera_name",
+          "tipo": "Texto",
+          "concepto": "carrera"
+        },
+        {
+          "nombre": "valor_name",
+          "tipo": "Texto",
+          "concepto": "medio_pago"
+        },
+        {
+          "nombre": "importe_cobrado",
+          "tipo": "Número",
+          "concepto": "importe_cobrado"
+        },
+        {
+          "nombre": "interno_cancelado",
+          "tipo": "Número",
+          "concepto": "comprobante_interno"
+        },
+        {
+          "nombre": "Número de registros",
+          "tipo": "Número",
+          "concepto": null
+        }
+      ]
+    },
+    "Detalle_Mes_Cuenta_por_Area": {
+      "archivo": "Detalle_Mes_Cuenta_por_Area_v4.xlsx",
+      "proyecto": "contabilidad",
+      "campos": [
+        {
+          "nombre": "AREA",
+          "tipo": "Texto",
+          "concepto": "area_negocio"
+        },
+        {
+          "nombre": "CUENTA",
+          "tipo": "Texto",
+          "concepto": "cuenta_contable"
+        },
+        {
+          "nombre": "MES",
+          "tipo": "Texto",
+          "concepto": "mes"
+        },
+        {
+          "nombre": "MONTO",
+          "tipo": "Número",
+          "concepto": "monto"
+        }
+      ]
+    },
+    "Facturas_a_Revisar_Contaduria": {
+      "archivo": "Facturas_a_Revisar_Contaduria_v2.xlsx",
+      "proyecto": "contabilidad",
+      "campos": [
+        {
+          "nombre": "NRO OP",
+          "tipo": "Texto",
+          "concepto": "orden_pago"
+        },
+        {
+          "nombre": "FACTURA",
+          "tipo": "Texto",
+          "concepto": "factura_nro"
+        },
+        {
+          "nombre": "CUENTA",
+          "tipo": "Texto",
+          "concepto": "cuenta_contable"
+        },
+        {
+          "nombre": "FECHA",
+          "tipo": "Fecha",
+          "concepto": "fecha_comprobante"
+        },
+        {
+          "nombre": "MONTO TOTAL (estimado)",
+          "tipo": "Número",
+          "concepto": "monto"
+        },
+        {
+          "nombre": "PROBLEMA DETECTADO",
+          "tipo": "Texto",
+          "concepto": "problema_detectado"
+        }
+      ]
+    },
+    "Sankey_por_Area": {
+      "archivo": "Sankey_por_Area_v5.xlsx",
+      "proyecto": "contabilidad",
+      "campos": [
+        {
+          "nombre": "ETAPA",
+          "tipo": "Texto",
+          "concepto": "etapa"
+        },
+        {
+          "nombre": "ORIGEN",
+          "tipo": "Texto",
+          "concepto": "origen"
+        },
+        {
+          "nombre": "DESTINO",
+          "tipo": "Texto",
+          "concepto": "destino"
+        },
+        {
+          "nombre": "MES",
+          "tipo": "Texto",
+          "concepto": "mes"
+        },
+        {
+          "nombre": "MONTO",
+          "tipo": "Número",
+          "concepto": "monto"
+        },
+        {
+          "nombre": "AREA_FILTRO",
+          "tipo": "Texto",
+          "concepto": "area_negocio"
+        },
+        {
+          "nombre": "TIPO_MONTO",
+          "tipo": "Texto",
+          "concepto": "tipo_monto"
+        }
+      ]
+    }
+  },
+  "reglas": [
+    "Una fuente nunca se renombra: se mapea.",
+    "Un campo sin concepto es deuda de gobernanza, no un error.",
+    "Un concepto sin definición no está listo para usarse.",
+    "Los sinónimos incluyen las variantes que el OCR suele producir."
+  ]
+}

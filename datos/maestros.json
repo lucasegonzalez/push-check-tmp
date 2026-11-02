@@ -1,0 +1,185 @@
+{
+  "$schema": "maestros/v1",
+  "descripcion": "Datos maestros y de referencia. Son la fuente de verdad de las entidades que el resto de los datos referencia.",
+  "fuente_modelo": "university-enrollment / supabase-schema.sql",
+  "estados": {
+    "propuesto": "Modelado sin validación del dueño.",
+    "validado": "Confirmado por el dueño del dato."
+  },
+  "maestros": {
+    "sedes": {
+      "descripcion": "Sedes de la universidad.",
+      "campos": [
+        "codigo",
+        "nombre",
+        "activa"
+      ],
+      "estado": "propuesto"
+    },
+    "atributos_sede": {
+      "descripcion": "Atributos geográficos y de contacto de cada sede.",
+      "campos": [
+        "sede_id",
+        "ciudad",
+        "provincia",
+        "pais",
+        "direccion"
+      ],
+      "estado": "propuesto"
+    },
+    "edificios": {
+      "descripcion": "Edificios donde se dictan clases, con capacidad y servicios.",
+      "campos": [
+        "codigo",
+        "nombre",
+        "sede_id",
+        "aulas",
+        "capacidad",
+        "turnos",
+        "laboratorio",
+        "biblioteca"
+      ],
+      "estado": "propuesto"
+    },
+    "carreras": {
+      "descripcion": "Carreras ofrecidas: nombre comercial, facultad, nivel, modalidad y estado.",
+      "campos": [
+        "codigo",
+        "nombre_marketing",
+        "nombre",
+        "facultad",
+        "nivel",
+        "modalidad",
+        "edificio_id",
+        "turno",
+        "duracion",
+        "cupo_min",
+        "cupo_max",
+        "objetivo",
+        "acreditacion",
+        "estado",
+        "fecha_cierre"
+      ],
+      "estado": "propuesto"
+    },
+    "edificio_carrera_bridge": {
+      "descripcion": "Qué carreras se dictan en qué edificio y en qué turno.",
+      "campos": [
+        "edificio_id",
+        "carrera_id",
+        "turno",
+        "activo"
+      ],
+      "estado": "propuesto"
+    },
+    "periodos": {
+      "descripcion": "Períodos académicos con fechas de cursada e inscripción.",
+      "campos": [
+        "codigo",
+        "nombre",
+        "anio",
+        "cuatrimestre",
+        "inicio_cursada",
+        "fin_cursada",
+        "inicio_inscripcion",
+        "fin_inscripcion",
+        "activo"
+      ],
+      "estado": "propuesto"
+    },
+    "turnos": {
+      "descripcion": "Turnos disponibles y su modalidad.",
+      "campos": [
+        "codigo",
+        "nombre",
+        "hora_inicio",
+        "hora_fin",
+        "modalidad",
+        "activo"
+      ],
+      "estado": "propuesto"
+    },
+    "precios": {
+      "descripcion": "Aranceles por carrera, edificio, turno y período.",
+      "campos": [
+        "carrera_id",
+        "edificio_id",
+        "turno",
+        "periodo_id",
+        "matricula",
+        "cuota",
+        "cantidad_cuotas",
+        "arancel_adicional",
+        "arancel_descripcion"
+      ],
+      "estado": "propuesto"
+    },
+    "convenios": {
+      "descripcion": "Convenios vigentes y su tipo de descuento.",
+      "campos": [
+        "nombre",
+        "tipo",
+        "descuento",
+        "activo"
+      ],
+      "estado": "propuesto"
+    },
+    "convenio_carrera_bridge": {
+      "descripcion": "Qué convenios aplican a qué carreras.",
+      "campos": [
+        "convenio_id",
+        "carrera_id"
+      ],
+      "estado": "propuesto"
+    },
+    "becas": {
+      "descripcion": "Becas disponibles con su porcentaje.",
+      "campos": [
+        "nombre",
+        "tipo",
+        "porcentaje",
+        "activo"
+      ],
+      "estado": "propuesto"
+    },
+    "descuentos": {
+      "descripcion": "Descuentos generales con su porcentaje.",
+      "campos": [
+        "nombre",
+        "tipo",
+        "porcentaje",
+        "activo"
+      ],
+      "estado": "propuesto"
+    },
+    "descuentos_temporales": {
+      "descripcion": "Vigencia de cada descuento en el tiempo.",
+      "campos": [
+        "descuento_id",
+        "desde",
+        "hasta",
+        "activo"
+      ],
+      "estado": "propuesto"
+    },
+    "asesores": {
+      "descripcion": "Asesores de admisión y su canal.",
+      "campos": [
+        "nombre",
+        "email",
+        "canal_id",
+        "activo"
+      ],
+      "estado": "propuesto"
+    },
+    "canales": {
+      "descripcion": "Canales de captación de interesados.",
+      "campos": [
+        "nombre",
+        "tipo",
+        "activo"
+      ],
+      "estado": "propuesto"
+    }
+  }
+}

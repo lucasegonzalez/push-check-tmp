@@ -1,0 +1,31 @@
+{
+  "_nota": "Ejemplo ilustrativo para probar la fusión sin llamar al modelo. No describe un tablero real.",
+  "nombre": "Encuestas docentes",
+  "objetivo": "Seguir la valoración de los alumnos sobre docentes y materias por año, cuatrimestre, sede y carrera.",
+  "frecuencia": "Por cuatrimestre",
+  "fuentes": [
+    { "nombre": "looker-studio-pro-435417.Encuestas_Docentes.Fact_Encuestas", "tipo": "BigQuery", "detalle": "Tabla de hechos de respuestas" },
+    { "nombre": "Maestro de carreras", "tipo": "Google Sheets", "detalle": "" }
+  ],
+  "joins": [
+    { "combinacion": "Encuestas + carreras", "izquierda": "Fact_Encuestas", "tipo": "Externo izquierdo (left)", "derecha": "Maestro de carreras", "claves": "carrera = carrera" }
+  ],
+  "filtros": [
+    { "nombre": "Año", "control": "Lista desplegable", "campo": "anio", "valores": "" },
+    { "nombre": "Validez", "control": "Lista desplegable", "campo": "enc_validez", "valores": "VALIDA, NO VALIDA" }
+  ],
+  "graficos": [
+    { "pagina": "Resumen", "titulo": "Satisfacción general", "tipo": "Scorecard", "metrica": "Promedio de Valor_promedio", "dimension": "", "definicion": "" },
+    { "pagina": "Resumen", "titulo": "Satisfacción por carrera", "tipo": "Barras", "metrica": "Promedio de Valor_promedio", "dimension": "carrera_sup", "definicion": "" }
+  ],
+  "calculados": [
+    { "nombre": "satisfaccion_ponderada", "formula": "SUM(Valor_promedio * cantidad) / SUM(cantidad)", "descripcion": "Promedio ponderado por cantidad de respuestas" }
+  ],
+  "campos": [
+    { "nombre": "enc_validez", "tipo": "Texto", "descripcion": "" },
+    { "nombre": "cantidad", "tipo": "Número", "descripcion": "" }
+  ],
+  "preguntas": [
+    "¿El scorecard de satisfacción general usa promedio simple o ponderado por cantidad de respuestas?"
+  ]
+}
