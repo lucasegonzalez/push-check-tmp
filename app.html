@@ -1,0 +1,651 @@
+<title>Catálogo de Tableros UFLO</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: herramienta de dos paneles; arriba de la ficha, cuatro bandejas de capturas (pegar = analizar); abajo la ficha que Claude completa */
+:root{
+  --bg:#EEF1F0; --surface:#FFFFFF; --sunken:#F6F8F7; --ink:#17201E; --muted:#5A6762; --line:#D3DBD8;
+  --accent:#2F55C4; --accent-ink:#FFFFFF; --accent-soft:#E4EAFB;
+  --ok:#1D7449; --ok-bg:#E1F2E8; --warn:#9A5600; --warn-bg:#FBEFD9; --danger:#B3261E; --danger-bg:#FBE4E2;
+  --f-display:'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --f-body:'Public Sans', 'Segoe UI', system-ui, sans-serif;
+  --f-mono:'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111615; --surface:#192120; --sunken:#141B1A; --ink:#E5ECE9; --muted:#97A6A0; --line:#2B3533;
+  --accent:#8AA6FF; --accent-ink:#0D1530; --accent-soft:#1F2A4A;
+  --ok:#62C893; --ok-bg:#16301F; --warn:#E5A955; --warn-bg:#33270F; --danger:#F08A82; --danger-bg:#3A1714; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111615; --surface:#192120; --sunken:#141B1A; --ink:#E5ECE9; --muted:#97A6A0; --line:#2B3533;
+  --accent:#8AA6FF; --accent-ink:#0D1530; --accent-soft:#1F2A4A;
+  --ok:#62C893; --ok-bg:#16301F; --warn:#E5A955; --warn-bg:#33270F; --danger:#F08A82; --danger-bg:#3A1714; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:20px 48px}
+.wrap{max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+.brand{display:flex;flex-direction:column;gap:2px;min-width:0}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,4vw,36px);line-height:1.1;margin:0;text-wrap:balance}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit;font-weight:500;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;cursor:pointer}
+button:hover:not(:disabled){border-color:var(--accent)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,.zone:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.danger{color:var(--danger);border-color:var(--danger)}
+button.danger.solid{background:var(--danger);color:var(--surface)}
+button.ghost{border-color:transparent;background:transparent;color:var(--muted);padding:4px 8px}
+button:disabled{opacity:.5;cursor:not-allowed}
+.status{font-size:13px;color:var(--muted);min-height:20px;margin:0}
+.grid{display:grid;grid-template-columns:280px minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.list{display:flex;flex-direction:column;gap:8px}
+.list-head{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--muted)}
+.item{display:flex;flex-direction:column;gap:6px;text-align:left;padding:12px 14px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line);width:100%}
+.item[aria-current="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.item .name{font-weight:600;overflow-wrap:anywhere}
+.item .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px}
+.chip.borrador{background:var(--warn-bg);color:var(--warn)}
+.chip.validado{background:var(--ok-bg);color:var(--ok)}
+.empty{padding:20px;border:1px dashed var(--line);border-radius:var(--r);color:var(--muted);font-size:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:28px;min-width:0}
+.intro{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:640px){.intro{grid-template-columns:minmax(0,1fr)}}
+.step{display:flex;flex-direction:column;gap:4px;padding:14px;background:var(--sunken);border-radius:8px}
+.step b{font-family:var(--f-mono);font-size:12px;color:var(--accent)}
+section.block{display:flex;flex-direction:column;gap:12px}
+.block-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h2{font-family:var(--f-display);font-weight:500;font-size:20px;margin:0}
+h3{font-size:14px;font-weight:600;margin:0}
+.hint{font-size:13px;color:var(--muted);margin:0;max-width:72ch}
+.privacy{display:flex;gap:10px;padding:10px 12px;border-radius:8px;background:var(--warn-bg);color:var(--warn);font-size:13px}
+.zones{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.zones{grid-template-columns:minmax(0,1fr)}}
+.zone{display:flex;flex-direction:column;gap:8px;padding:14px;border:1.5px dashed var(--line);border-radius:var(--r);background:var(--sunken);cursor:pointer;min-width:0}
+.zone[aria-pressed="true"]{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+.zone.over{border-color:var(--accent)}
+.zone-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.zone-head span{font-size:12px;color:var(--muted)}
+.zone .paste{font-size:12px;font-family:var(--f-mono);color:var(--accent)}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.thumb{display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--muted);min-width:0;position:relative}
+.thumb img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:6px;border:1px solid var(--line);background:var(--surface)}
+.thumb .row{display:flex;justify-content:space-between;align-items:center;gap:2px}
+.thumb .dot{width:8px;height:8px;border-radius:50%;background:var(--warn);flex:none}
+.thumb .dot.ok{background:var(--ok)}
+.ai-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:12px 14px;border-radius:8px;border:1px solid var(--line)}
+.ai-bar .msg{font-size:13px;color:var(--muted);flex:1 1 260px;min-width:0}
+.toggle{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--ink)}
+.toggle input{width:auto}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
+@media (max-width:640px){.fields{grid-template-columns:minmax(0,1fr)}}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field.full{grid-column:1/-1}
+label,.label{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--sunken);border:1px solid var(--line);border-radius:6px;padding:8px 10px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:64px}
+.mono{font-family:var(--f-mono);font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.gov-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.gov-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:4px 0 18px}
+.gov-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.gov-value{font-size:24px;font-weight:700;line-height:1.1;letter-spacing:-.02em}
+.gov-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.gov-hint{font-size:11.5px;color:var(--muted)}
+.gov-ok{color:var(--ok)}
+.gov-warn{color:var(--warn)}
+.gov-sec{margin-top:26px}
+.gov-sec h3{font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.opt{font-size:13px;padding:5px 12px;border-radius:999px;background:var(--sunken)}
+.opt[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.add-other{display:flex;gap:6px;max-width:360px}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:720px}
+th{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px;background:var(--sunken);border-bottom:1px solid var(--line)}
+td{padding:4px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td input,td textarea,td select{background:transparent;border-color:transparent;padding:6px}
+td input:hover,td textarea:hover,td select:hover{border-color:var(--line)}
+td textarea{min-height:38px}
+td.x{width:40px}
+.confirm{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px;border-radius:8px;background:var(--danger-bg);color:var(--danger);font-size:14px}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid var(--line);padding-top:16px}
+@media (prefers-reduced-motion: no-preference){.item,button,.zone{transition:border-color .15s, background .15s}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="eyebrow">Gobernanza de datos · Looker Studio</span>
+      <h1>Catálogo de tableros</h1>
+    </div>
+    <div class="actions">
+      <button id="btn-md" type="button">Exportar catálogo (.md)</button>
+      <button id="btn-csv" type="button">Exportar gráficos (.csv)</button>
+      <button id="btn-gov" type="button">Gobernanza</button>
+      <button id="btn-new" class="primary" type="button">+ Nuevo tablero</button>
+    </div>
+  </header>
+  <p class="status" id="status" role="status">Conectando con el catálogo…</p>
+  <div class="grid">
+    <nav class="list" id="list" aria-label="Tableros"></nav>
+    <main class="panel" id="editor"></main>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clone = o => JSON.parse(JSON.stringify(o));
+let db=null, assets=null, sample=null, downloads=null, col=null, imgLimits=null, govView=false;
+const docs = new Map(); let order = [];
+let selId = null, work = null, saveTimer = null, confirmDelete = false, aiCtl = null, dirty = false;
+let activeSec = 'paginas', autoAI = true, aiBusy = false, aiTimer = null, aiMsg = '';
+try { autoAI = localStorage.getItem('cat-auto') !== '0'; } catch(_){}
+const localFiles = new Map();
+const sessionOnly = new Map();
+
+const SECS = [
+  ['paginas','Páginas del tablero','Cada página o pestaña, con títulos y gráficos visibles'],
+  ['filtros','Filtros','Los controles, mejor si están abiertos mostrando sus opciones'],
+  ['fuente','Fuente de datos','Recurso → Administrar fuentes → Editar: la lista de campos'],
+  ['joins','Combinación (joins)','La ventana “Combinar datos” con tablas, uniones y claves']
+];
+const SECNAME = Object.fromEntries(SECS.map(s => [s[0], s[1]]));
+const USUARIOS = ['Rectorado','Consejo / Junta','Decanos','Directores de carrera','Secretaría Académica','Comité de calidad','Admisión','Marketing','Contaduría y Finanzas','TI','Docentes','Bienestar estudiantil'];
+const OPTS = {
+  graficoTipo: ['Scorecard','Barras','Columnas','Líneas','Serie temporal','Tabla','Tabla dinámica','Torta / anillo','Mapa','Dispersión','Medidor','Otro'],
+  control: ['Lista desplegable','Rango de fechas','Casilla','Búsqueda','Control deslizante','Botón','Parámetro','Otro'],
+  fuenteTipo: ['BigQuery','Google Sheets','SQL Server','CSV / archivo','Combinación','Otra'],
+  join: ['Interno (inner)','Externo izquierdo (left)','Externo derecho (right)','Externo completo (full)','Cruzado (cross)'],
+  dimension: ['completitud','exactitud','vigencia','consistencia','unicidad','validez'],
+  dudaEstado: ['abierta','en revisión','resuelta','descartada'],
+  estadoTablero: ['borrador','validado','obsoleto','retirado']
+};
+const ESTADO_LABEL = {borrador:'Borrador', validado:'Validado', obsoleto:'Obsoleto', retirado:'Retirado'};
+const COLS = {
+  graficos: [['pagina','Página'],['titulo','Gráfico'],['tipo','Tipo','graficoTipo'],['metrica','Métrica'],['dimension','Dimensión'],['definicion','Definición / regla','area']],
+  filtros: [['nombre','Filtro'],['control','Control','control'],['campo','Campo'],['valores','Valores u opciones']],
+  fuentes: [['nombre','Fuente','fuente'],['plataforma','Plataforma','fuenteTipo'],['objeto','Objeto (proyecto.dataset.tabla)','mono'],['detalle','Notas']],
+  joins: [['combinacion','Combinación'],['izquierda','Tabla izquierda','fuente'],['tipo','Unión','join'],['derecha','Tabla derecha','fuente'],['claves','Claves (campo = campo)','mono']],
+  calculados: [['nombre','Campo','mono'],['formula','Fórmula','areamono'],['descripcion','Qué significa','area']],
+  campos: [['nombre','Campo','mono'],['tipo','Tipo'],['concepto','Concepto','mono'],['descripcion','Descripción']],
+  dudas: [['texto','Duda o brecha','area'],['dimension','Dimensión','dimension'],['estado','Estado','dudaEstado'],['nota','Resolución']]
+};
+const ARRAYS = Object.keys(COLS);
+const EMPTY = () => ({nombre:'Tablero sin nombre', area:'', dueno:'', custodio:'', objetivo:'', usuarios:[], frecuencia:'', link:'', estado:'borrador',
+  vigente_desde:'', vigente_hasta:'', reemplazado_por:'',
+  graficos:[], filtros:[], fuentes:[], joins:[], calculados:[], campos:[], dudas:[], capturas:[], actualizado:new Date().toISOString()});
+function norm(d){
+  const o = Object.assign(EMPTY(), d || {});
+  if (typeof o.usuarios === 'string') o.usuarios = o.usuarios.split(',').map(s=>s.trim()).filter(Boolean);
+  if (typeof o.fuentes === 'string') o.fuentes = o.fuentes.split(',').map(s=>s.trim()).filter(Boolean).map(n=>({nombre:n, tipo:/^[\w-]+\.[\w-]+\.[\w-]+$/.test(n)?'BigQuery':'', detalle:''}));
+  if (typeof o.filtros === 'string') o.filtros = o.filtros.split(',').map(s=>s.trim()).filter(Boolean).map(n=>({nombre:n, control:'', campo:'', valores:''}));
+  // Migración: las dudas eran texto libre en `preguntas`; ahora son filas con dimensión.
+  if (Array.isArray(o.preguntas) && o.preguntas.length){
+    o.dudas = [...(Array.isArray(o.dudas) ? o.dudas : []), ...o.preguntas.map(q => typeof q === 'string'
+      ? {texto:q, dimension:'completitud', estado:'abierta', nota:''}
+      : q)];
+  }
+  delete o.preguntas;
+  for (const k of [...ARRAYS,'usuarios','dudas','capturas']) if (!Array.isArray(o[k])) o[k] = [];
+  o.capturas = o.capturas.map(c => ({seccion:'paginas', analizada:false, ...c}));
+  o.fuentes = o.fuentes.map(f => {
+    const g = {plataforma:'', objeto:'', detalle:'', ...f};
+    if (!g.plataforma && f.tipo) g.plataforma = f.tipo;   // el tipo viejo era la plataforma
+    if (!g.objeto && f.detalle) g.objeto = f.detalle;      // el detalle viejo era el objeto
+    delete g.tipo;
+    return g;
+  });
+  o.campos = o.campos.map(c => ({concepto:'', descripcion:'', ...c}));
+  o.dudas = o.dudas.map(q => (typeof q === 'string' ? {texto:q, dimension:'completitud', estado:'abierta', nota:''} : {texto:'', dimension:'completitud', estado:'abierta', nota:'', ...q}));
+  return o;
+}
+const setStatus = t => { $('#status').textContent = t; };
+const knownFuentes = () => { const s = new Set(); for (const d of docs.values()) norm(d).fuentes.forEach(f => f.nombre && s.add(f.nombre)); work?.fuentes.forEach(f => f.nombre && s.add(f.nombre)); return [...s].sort(); };
+
+/* ---------- lista ---------- */
+function renderList(){
+  const el = $('#list'); const ids = order.length ? order : [...docs.keys()];
+  const head = `<div class="list-head"><span>${ids.length} ${ids.length===1?'tablero':'tableros'}</span><span>${[...docs.values()].filter(d=>d.estado==='validado').length} validados</span></div>`;
+  if (!ids.length){ el.innerHTML = head + `<div class="empty">Todavía no hay tableros. Pegá una captura con ⌘V y se crea uno nuevo.</div>`; return; }
+  el.innerHTML = head + ids.map(id => { const d = norm(docs.get(id));
+    return `<button type="button" class="item" data-open="${esc(id)}" aria-current="${id===selId}">
+      <span class="name">${esc(d.nombre)}</span>
+      <span class="meta"><span class="chip ${d.estado==='validado'?'validado':'borrador'}">${esc(ESTADO_LABEL[d.estado]||d.estado||'Borrador')}</span>
+      <span>${d.graficos.length} gráficos · ${d.capturas.length} capturas</span></span></button>`; }).join('');
+}
+
+
+/* ---------- gobernanza (DAMA: metadata, calidad, roles, arquitectura) ---------- */
+function governanceData(){
+  const ids = order.length ? order : [...docs.keys()];
+  const lista = ids.map(id => ({ id, ...norm(docs.get(id)) }));
+
+  const camposSinConcepto = [], dudasAbiertas = [], brechas = [];
+  let campos = 0, conConcepto = 0, fuentes = 0, conObjeto = 0, calculados = 0, conFormula = 0;
+
+  for (const d of lista){
+    for (const c of d.campos){ campos += 1; if (String(c.concepto||'').trim()) conConcepto += 1; else camposSinConcepto.push([d.nombre, c.nombre]); }
+    for (const f of d.fuentes){ fuentes += 1; if (String(f.objeto||'').trim()) conObjeto += 1; }
+    for (const c of d.calculados){ calculados += 1; if (String(c.formula||'').trim()) conFormula += 1; }
+    for (const q of d.dudas){ if (q.estado !== 'resuelta' && q.estado !== 'descartada') dudasAbiertas.push([d.nombre, q]); }
+
+    const falta = [];
+    if (!String(d.dueno||'').trim()) falta.push('sin dueño');
+    if (!String(d.custodio||'').trim()) falta.push('sin custodio');
+    if (!String(d.objetivo||'').trim()) falta.push('sin objetivo');
+    if (d.estado !== 'validado') falta.push('sin validar');
+    if (d.estado === 'obsoleto' && !String(d.reemplazado_por||'').trim()) falta.push('obsoleto sin reemplazo');
+    if (d.fuentes.some(f => !String(f.objeto||'').trim())) falta.push('fuente sin objeto');
+    if (d.fuentes.some(f => !String(f.plataforma||'').trim())) falta.push('fuente sin plataforma');
+    if (falta.length) brechas.push([d.nombre, falta.join(' · ')]);
+  }
+
+  const porDimension = {};
+  for (const [, q] of dudasAbiertas){ const k = q.dimension || 'sin clasificar'; porDimension[k] = (porDimension[k] || 0) + 1; }
+
+  return {
+    tableros: lista.length,
+    validados: lista.filter(d => d.estado === 'validado').length,
+    obsoletos: lista.filter(d => d.estado === 'obsoleto' || d.estado === 'retirado').length,
+    campos, conConcepto, fuentes, conObjeto, calculados, conFormula,
+    dudasAbiertas: dudasAbiertas.length,
+    porDimension,
+    camposSinConcepto,
+    brechas,
+    dudas: dudasAbiertas.map(([tablero, q]) => ({ tablero, texto: q.texto || '', dimension: q.dimension || '', estado: q.estado || '' })),
+  };
+}
+
+function govTabla(cols, rows, vacio){
+  if (!rows.length) return `<p class="hint">${vacio}</p>`;
+  const visibles = rows.slice(0, 60);
+  const resto = rows.length - visibles.length;
+  return `<div class="tbl-wrap"><table><thead><tr>${cols.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>${
+    visibles.map(r => `<tr>${cols.map(([k]) => `<td>${esc(r[k] ?? '—')}</td>`).join('')}</tr>`).join('')
+  }</tbody></table></div>${resto > 0 ? `<p class="hint">y ${resto} más…</p>` : ''}`;
+}
+
+function govHtml(){
+  const g = governanceData();
+  const pct = (part, total) => total ? Math.round(part / total * 100) + '%' : '—';
+  const card = (label, value, hint, cls) => `<div class="gov-card"><span class="gov-value ${cls || ''}">${value}</span><span class="gov-label">${label}</span>${hint ? `<span class="gov-hint">${hint}</span>` : ''}</div>`;
+
+  const dims = Object.entries(g.porDimension).sort((a, b) => b[1] - a[1]);
+
+  return `<section class="block">
+    <div class="gov-head"><h2>Gobernanza de datos</h2><button type="button" id="btn-gov-back">Volver a los tableros</button></div>
+    <p class="hint">Cuatro áreas de DAMA-DMBOK: metadata, calidad, roles y arquitectura. Los números salen del catálogo, no de una estimación.</p>
+
+    <div class="gov-grid">
+      ${card('Tableros', g.tableros, `${g.validados} validados · ${g.obsoletos} fuera de uso`)}
+      ${card('Campos', g.campos, `${pct(g.conConcepto, g.campos)} con concepto`)}
+      ${card('Dudas abiertas', g.dudasAbiertas, `${dims.length} dimensiones`)}
+      ${card('Fuentes', g.fuentes, `${pct(g.conObjeto, g.fuentes)} con objeto`)}
+      ${card('Calculados', g.calculados, `${pct(g.conFormula, g.calculados)} con fórmula`)}
+      ${card('Brechas', g.brechas.length, 'tableros con algo pendiente')}
+    </div>
+
+    <div class="gov-sec">
+      <h3>Metadata · campos sin concepto canónico</h3>
+      ${govTabla([['tablero', 'Tablero'], ['campo', 'Campo']], g.camposSinConcepto.map(([tablero, campo]) => ({ tablero, campo })), 'Todos los campos tienen concepto asignado.')}
+    </div>
+
+    <div class="gov-sec">
+      <h3>Calidad · dudas abiertas por dimensión</h3>
+      ${dims.length ? `<div class="gov-grid">${dims.map(([d, n]) => card(d, n, 'abiertas')).join('')}</div>` : '<p class="hint">Sin dudas abiertas.</p>'}
+      ${govTabla([['tablero', 'Tablero'], ['texto', 'Duda'], ['dimension', 'Dimensión'], ['estado', 'Estado']], g.dudas, 'No hay dudas registradas.')}
+    </div>
+
+    <div class="gov-sec">
+      <h3>Roles y ciclo de vida · tableros con brechas</h3>
+      ${govTabla([['tablero', 'Tablero'], ['falta', 'Qué falta']], g.brechas.map(([tablero, falta]) => ({ tablero, falta })), 'Ningún tablero tiene brechas abiertas.')}
+    </div>
+  </section>`;
+}
+
+window.governanceData = governanceData;
+
+/* ---------- editor ---------- */
+function ctl(key, i, k, kind, v){
+  const id = `${key}-${i}-${k}`, a = `id="${id}" data-arr="${key}" data-i="${i}" data-k="${k}"`;
+  if (kind === 'area' || kind === 'areamono') return `<textarea ${a} rows="1" class="${kind==='areamono'?'mono':''}">${esc(v)}</textarea>`;
+  if (OPTS[kind]){ const opts = OPTS[kind].includes(v) || !v ? OPTS[kind] : [v, ...OPTS[kind]];
+    return `<select ${a}><option value="">—</option>${opts.map(o=>`<option ${o===v?'selected':''}>${esc(o)}</option>`).join('')}</select>`; }
+  if (kind === 'fuente') return `<input ${a} list="dl-fuentes" class="mono" value="${esc(v)}">`;
+  return `<input ${a} class="${kind==='mono'?'mono':''}" value="${esc(v)}">`;
+}
+function rowsTable(key){
+  const cols = COLS[key];
+  const rows = work[key].map((r,i)=>`<tr>${cols.map(([k,,kind])=>`<td>${ctl(key,i,k,kind,r[k])}</td>`).join('')}<td class="x"><button type="button" class="ghost" data-del="${key}" data-i="${i}" aria-label="Quitar fila">✕</button></td></tr>`).join('');
+  return `<div class="tbl-wrap"><table><thead><tr>${cols.map(([,l])=>`<th>${l}</th>`).join('')}<th></th></tr></thead><tbody>${rows || `<tr><td colspan="${cols.length+1}" class="hint" style="padding:12px">Vacío. Se completa al analizar capturas, o agregá una fila.</td></tr>`}</tbody></table></div>`;
+}
+function tableBlock(key, title, hint, addLabel){
+  return `<section class="block"><div class="block-head"><h2>${title}</h2><button type="button" data-add="${key}">+ ${addLabel}</button></div>${hint?`<p class="hint">${hint}</p>`:''}${rowsTable(key)}</section>`;
+}
+function thumbSrc(c){ const f = localFiles.get(c.id); return f ? (f._url ||= URL.createObjectURL(f)) : '/_blob/' + c.id; }
+function allCaps(){ return [...work.capturas, ...(sessionOnly.get(selId) || [])]; }
+const pending = () => allCaps().filter(c => !c.analizada);
+
+function aiBar(){
+  const canAI = !!(sample && imgLimits), p = pending().length;
+  const msg = aiMsg || (!canAI ? 'El análisis con Claude no está disponible en esta vista.' : p ? `${p} ${p===1?'captura sin analizar':'capturas sin analizar'}.` : allCaps().length ? 'Todas las capturas están analizadas.' : 'Pegá la primera captura para empezar.');
+  return `<div class="ai-bar" id="ai-bar">
+    <label class="toggle" for="auto-ai"><input type="checkbox" id="auto-ai" ${autoAI?'checked':''} ${canAI?'':'disabled'}> Analizar al pegar</label>
+    <span class="msg" id="ai-msg" role="status">${esc(msg)}</span>
+    <button type="button" id="btn-stop" ${aiBusy?'':'hidden'}>Detener</button>
+    <button type="button" class="primary" id="btn-ai" ${canAI && p && !aiBusy ? '' : 'disabled'}>Analizar pendientes</button>
+    <button type="button" id="btn-ai-all" ${canAI && allCaps().length && !aiBusy ? '' : 'disabled'}>Reanalizar todo</button>
+  </div>`;
+}
+function renderEditor(){
+  const el = $('#editor');
+  if (govView){ el.innerHTML = govHtml(); return; }
+  if (!work){
+    el.innerHTML = `<section class="block"><h2>Pegá, Claude completa, vos validás</h2>
+      <div class="intro">
+        <div class="step"><b>1 · Capturá</b><span>⌘ + Control + Shift + 4 copia un área de la pantalla.</span></div>
+        <div class="step"><b>2 · Pegá con ⌘V</b><span>Elegí la bandeja (páginas, filtros, fuente o joins) y pegá. Claude la analiza sola.</span></div>
+        <div class="step"><b>3 · Validá</b><span>Revisá la ficha, completá usuarios y dueño, y marcala validada.</span></div>
+      </div><p class="hint">Elegí un tablero de la lista o pegá una captura para crear uno nuevo.</p></section>`;
+    return;
+  }
+  const w = work, caps = allCaps(), customUsers = w.usuarios.filter(u => !USUARIOS.includes(u));
+  el.innerHTML = `
+  <datalist id="dl-fuentes">${knownFuentes().map(f=>`<option value="${esc(f)}"></option>`).join('')}</datalist>
+  <section class="block">
+    <div class="block-head"><h2>Capturas</h2><span class="hint">Pegando en: <b>${esc(SECNAME[activeSec])}</b></span></div>
+    <div class="privacy"><span aria-hidden="true">⚠</span><span>Antes de capturar, ocultá números, nombres de personas y DNI. Para documentar alcanza con títulos, ejes, filtros, campos y uniones.</span></div>
+    <input type="file" id="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
+    <div class="zones">${SECS.map(([k,t,h]) => { const cs = caps.filter(c => c.seccion === k);
+      return `<div class="zone ${''}" role="button" tabindex="0" data-sec="${k}" aria-pressed="${k===activeSec}">
+        <div class="zone-head"><h3>${t}</h3><span>${cs.length}</span></div>
+        <span class="hint">${h}</span>
+        <span class="paste">${k===activeSec ? '⌘V pega acá · o arrastrá · o ' : ''}<button type="button" class="ghost" data-pick="${k}">elegir archivo</button></span>
+        ${cs.length ? `<div class="thumbs">${cs.map(c=>`<div class="thumb"><img src="${esc(thumbSrc(c))}" alt="${esc(c.nombre)}"><div class="row"><span class="dot ${c.analizada?'ok':''}" title="${c.analizada?'Analizada':'Sin analizar'}"></span><button type="button" class="ghost" data-delcap="${esc(c.id)}" aria-label="Quitar captura">✕</button></div></div>`).join('')}</div>` : ''}
+      </div>`; }).join('')}</div>
+    ${aiBar()}
+    ${assets ? '' : '<p class="hint">El almacenamiento de imágenes no está disponible en esta vista: las capturas se analizan pero no quedan guardadas.</p>'}
+  </section>
+
+  <section class="block">
+    <h2>Ficha del tablero</h2>
+    <div class="fields">
+      <div class="field"><label for="f-nombre">Nombre</label><input id="f-nombre" data-f="nombre" value="${esc(w.nombre)}"></div>
+      <div class="field"><label for="f-estado">Ciclo de vida</label><select id="f-estado" data-f="estado">${OPTS.estadoTablero.map(e=>`<option value="${e}" ${e===w.estado?'selected':''}>${ESTADO_LABEL[e]}</option>`).join('')}</select></div>
+      <div class="field"><label for="f-area">Área</label><input id="f-area" data-f="area" list="dl-areas" value="${esc(w.area)}"><datalist id="dl-areas">${USUARIOS.map(u=>`<option value="${esc(u)}"></option>`).join('')}</datalist></div>
+      <div class="field"><label for="f-dueno">Dueño del dato</label><input id="f-dueno" data-f="dueno" value="${esc(w.dueno)}" placeholder="Quién decide sobre los números"><span class="hint">El dueño decide; el custodio documenta.</span></div>
+      <div class="field"><label for="f-custodio">Custodio del dato</label><input id="f-custodio" data-f="custodio" value="${esc(w.custodio)}" placeholder="Quién lo documenta y lo mantiene"></div>
+      <div class="field full"><label for="f-objetivo">Objetivo · qué pregunta responde</label><textarea id="f-objetivo" data-f="objetivo">${esc(w.objetivo)}</textarea></div>
+      <div class="field full"><span class="label">Usuarios</span>
+        <div class="chips">${[...USUARIOS, ...customUsers].map(u=>`<button type="button" class="opt" data-user="${esc(u)}" aria-pressed="${w.usuarios.includes(u)}">${esc(u)}</button>`).join('')}</div>
+        <div class="add-other"><input id="f-user-other" placeholder="Otro usuario"><button type="button" id="btn-user-add">Agregar</button></div></div>
+      <div class="field"><label for="f-frecuencia">Frecuencia de actualización</label><select id="f-frecuencia" data-f="frecuencia">${['', 'En tiempo real','Diaria','Semanal','Mensual','Por cuatrimestre','Anual','Manual'].concat(['', 'En tiempo real','Diaria','Semanal','Mensual','Por cuatrimestre','Anual','Manual'].includes(w.frecuencia)?[]:[w.frecuencia]).map(o=>`<option value="${esc(o)}" ${o===w.frecuencia?'selected':''}>${o||'—'}</option>`).join('')}</select></div>
+      <div class="field"><label for="f-link">Enlace al tablero</label><input id="f-link" data-f="link" class="mono" value="${esc(w.link)}" placeholder="https://lookerstudio.google.com/…"></div>
+      <div class="field"><label for="f-vigente-desde">Vigente desde</label><input id="f-vigente-desde" data-f="vigente_desde" type="date" value="${esc(w.vigente_desde)}"></div>
+      <div class="field"><label for="f-vigente-hasta">Vigente hasta</label><input id="f-vigente-hasta" data-f="vigente_hasta" type="date" value="${esc(w.vigente_hasta)}"></div>
+      <div class="field"><label for="f-reemplazado">Reemplazado por</label><input id="f-reemplazado" data-f="reemplazado_por" value="${esc(w.reemplazado_por)}" placeholder="Tablero que lo reemplaza"></div>
+    </div>
+  </section>
+
+  ${tableBlock('fuentes','Fuentes de datos','Cada tabla o planilla que usa el tablero. La lista desplegable recuerda las fuentes de otros tableros.','Agregar fuente')}
+  ${tableBlock('joins','Combinaciones (joins)','Una fila por unión. Si hay dos combinaciones, el nombre en la primera columna las distingue.','Agregar unión')}
+  ${tableBlock('filtros','Filtros y controles','','Agregar filtro')}
+  ${tableBlock('graficos','Gráficos e indicadores','La definición dice cómo se calcula: por ejemplo, promedio ponderado por respuestas, solo encuestas válidas.','Agregar gráfico')}
+  ${tableBlock('calculados','Campos calculados','','Agregar campo')}
+  ${tableBlock('campos','Campos de la fuente','Alimentan el diccionario de datos.','Agregar campo')}
+
+  ${tableBlock('dudas','Dudas y brechas de calidad','Clasificá cada duda por dimensión: completitud (falta un dato), exactitud (puede estar mal), vigencia (puede estar viejo), consistencia (no coincide con otra fuente), unicidad (duplicado) o validez (no respeta el dominio).','Agregar duda')}
+
+  ${confirmDelete ? `<div class="confirm" role="alert"><span>¿Borrar “${esc(w.nombre)}” y sus capturas? No se puede deshacer.</span><button type="button" class="danger solid" id="btn-del-yes">Borrar</button><button type="button" id="btn-del-no">Cancelar</button></div>` : ''}
+  <div class="foot"><span class="status" id="save-status">${w.actualizado ? 'Última modificación: ' + new Date(w.actualizado).toLocaleString('es-AR') : ''}</span>
+    <button type="button" class="danger" id="btn-del">Borrar tablero</button></div>`;
+}
+function refreshAiBar(){ const b = $('#ai-bar'); if (b) b.outerHTML = aiBar(); }
+function setAiMsg(t){ aiMsg = t; const m = $('#ai-msg'); if (m) m.textContent = t; }
+
+/* ---------- guardar ---------- */
+function scheduleSave(){ dirty = true; const s=$('#save-status'); if (s) s.textContent = 'Guardando…'; clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 700); }
+async function saveNow(){
+  clearTimeout(saveTimer); if (!work || !selId) return;
+  work.actualizado = new Date().toISOString();
+  const body = clone(work); const id = selId;
+  docs.set(id, body); if (!order.includes(id)) order.unshift(id); renderList();
+  if (!col){ dirty = false; return; }
+  try { await col.doc(id).set(body); dirty = false; const s=$('#save-status'); if (s && id===selId) s.textContent = 'Guardado · ' + new Date().toLocaleTimeString('es-AR'); }
+  catch(e){ const s=$('#save-status'); if (s) s.textContent = e && e.code==='quota_exceeded' ? 'El catálogo está lleno: borrá tableros que ya no uses.' : 'No se pudo guardar. El cambio se reintenta con la próxima edición.'; }
+}
+function select(id){ if (dirty) saveNow(); aiCtl?.abort(); selId = id; work = id ? norm(clone(docs.get(id))) : null; confirmDelete = false; aiMsg=''; renderList(); renderEditor(); }
+function createNew(){ if (dirty) saveNow(); const id = 'tb-' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); selId = id; work = EMPTY(); activeSec='paginas'; aiMsg=''; docs.set(id, clone(work)); order.unshift(id); confirmDelete=false; renderList(); renderEditor(); saveNow(); }
+
+/* ---------- eventos ---------- */
+$('#btn-new').onclick = () => { createNew(); $('#f-nombre')?.select(); };
+$('#list').addEventListener('click', e => { const b = e.target.closest('[data-open]'); if (b) select(b.dataset.open); });
+const ed = $('#editor');
+function setActive(sec){ if (sec === activeSec) return; activeSec = sec; ed.querySelectorAll('.zone').forEach(z => z.setAttribute('aria-pressed', z.dataset.sec === sec)); renderEditorKeepScroll(); }
+function renderEditorKeepScroll(){ const y = window.scrollY; renderEditor(); window.scrollTo(0, y); }
+
+ed.addEventListener('input', e => {
+  const t = e.target; if (!work) return;
+  if (t.dataset.f){ work[t.dataset.f] = t.value; if (t.dataset.f==='nombre') { docs.set(selId, clone(work)); renderList(); } }
+  else if (t.dataset.arr){ work[t.dataset.arr][+t.dataset.i][t.dataset.k] = t.value; }
+  else return;
+  scheduleSave();
+});
+ed.addEventListener('change', e => {
+  const t = e.target;
+  if (t.id === 'file'){ addFiles(t.files, activeSec); t.value=''; return; }
+  if (t.id === 'auto-ai'){ autoAI = t.checked; try { localStorage.setItem('cat-auto', autoAI?'1':'0'); } catch(_){} if (autoAI) queueAuto(); return; }
+  if (t.tagName === 'SELECT'){ if (t.dataset.f) work[t.dataset.f] = t.value; else if (t.dataset.arr) work[t.dataset.arr][+t.dataset.i][t.dataset.k] = t.value; saveNow(); if (t.dataset.f==='estado') renderList(); }
+});
+ed.addEventListener('keydown', e => { const z = e.target.closest?.('.zone'); if (z && e.target === z && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); setActive(z.dataset.sec); } if (e.key==='Enter' && e.target.id==='f-user-other'){ e.preventDefault(); $('#btn-user-add').click(); } });
+ed.addEventListener('click', async e => {
+  const z = e.target.closest('.zone'); const t = e.target.closest('button');
+  if (z && (!t || !t.dataset.delcap)) setActive(z.dataset.sec);
+  if (!t || !work) return;
+  if (t.dataset.pick){ activeSec = t.dataset.pick; $('#file').click(); return; }
+  if (t.dataset.user){ const u = t.dataset.user; work.usuarios = work.usuarios.includes(u) ? work.usuarios.filter(x=>x!==u) : [...work.usuarios, u]; t.setAttribute('aria-pressed', work.usuarios.includes(u)); scheduleSave(); return; }
+  if (t.id === 'btn-user-add'){ const v = $('#f-user-other').value.trim(); if (v && !work.usuarios.includes(v)){ work.usuarios.push(v); renderEditorKeepScroll(); saveNow(); } return; }
+  if (t.dataset.add){ const o={}; COLS[t.dataset.add].forEach(([k])=>o[k]=''); work[t.dataset.add].push(o); renderEditorKeepScroll(); scheduleSave(); document.getElementById(`${t.dataset.add}-${work[t.dataset.add].length-1}-${COLS[t.dataset.add][0][0]}`)?.focus(); return; }
+  if (t.dataset.del){ work[t.dataset.del].splice(+t.dataset.i,1); renderEditorKeepScroll(); scheduleSave(); return; }
+  if (t.dataset.delcap){ const id = t.dataset.delcap; const so = sessionOnly.get(selId)||[];
+    if (so.some(c=>c.id===id)) sessionOnly.set(selId, so.filter(c=>c.id!==id));
+    else { work.capturas = work.capturas.filter(c=>c.id!==id); await saveNow(); if (assets) assets.delete(id).catch(()=>{}); }
+    renderEditorKeepScroll(); return; }
+  if (t.id==='btn-ai'){ analyze(pending()); return; }
+  if (t.id==='btn-ai-all'){ analyze(allCaps()); return; }
+  if (t.id==='btn-stop'){ aiCtl?.abort(); return; }
+  if (t.id==='btn-gov-back'){ govView = false; renderEditorKeepScroll(); return; }
+  if (t.id==='btn-del'){ confirmDelete = true; renderEditorKeepScroll(); return; }
+  if (t.id==='btn-del-no'){ confirmDelete = false; renderEditorKeepScroll(); return; }
+  if (t.id==='btn-del-yes'){ const id = selId, caps = work.capturas.map(c=>c.id);
+    clearTimeout(saveTimer); dirty=false; aiCtl?.abort(); docs.delete(id); order = order.filter(x=>x!==id); selId=null; work=null; confirmDelete=false; renderList(); renderEditor();
+    if (col){ try { await col.doc(id).delete(); if (assets) for (const c of caps) assets.delete(c).catch(()=>{}); setStatus('Tablero borrado.'); } catch(_){ setStatus('No se pudo borrar el tablero. Probá de nuevo.'); } }
+  }
+});
+ed.addEventListener('dragover', e => { const z = e.target.closest('.zone'); if (z){ e.preventDefault(); z.classList.add('over'); } });
+ed.addEventListener('dragleave', e => { const z = e.target.closest('.zone'); if (z) z.classList.remove('over'); });
+ed.addEventListener('drop', e => { const z = e.target.closest('.zone'); if (z){ e.preventDefault(); z.classList.remove('over'); activeSec = z.dataset.sec; addFiles(e.dataTransfer.files, z.dataset.sec); } });
+
+document.addEventListener('paste', e => {
+  const imgs = [...(e.clipboardData?.items || [])].filter(i => i.kind === 'file' && /^image\/(png|jpeg|webp)$/.test(i.type)).map(i => i.getAsFile()).filter(Boolean);
+  if (!imgs.length) return;
+  e.preventDefault();
+  if (!work) createNew();
+  addFiles(imgs, activeSec);
+});
+
+async function addFiles(list, sec){
+  const files = [...(list||[])].filter(f => /^image\/(png|jpeg|webp)$/.test(f.type));
+  if (!files.length){ setStatus('Solo se aceptan imágenes PNG, JPG o WebP.'); return; }
+  const id0 = selId, stamp = new Date().toLocaleTimeString('es-AR').replace(/:/g,'-');
+  setAiMsg(`Subiendo ${files.length===1?'la captura':files.length+' capturas'} a ${SECNAME[sec]}…`);
+  for (const [i, f0] of files.entries()){
+    const f = new File([f0], `${sec}-${stamp}-${i+1}.${f0.type.split('/')[1]}`, {type: f0.type});
+    if (assets){
+      try { const r = await assets.upload(f); localFiles.set(r.id, f); if (selId===id0) work.capturas.push({id:r.id, nombre:f.name, seccion:sec, analizada:false}); }
+      catch(e){ setAiMsg(e && e.code==='too_large' ? 'La captura supera 20 MB.' : e && e.code==='quota_or_state' ? 'No queda espacio para más capturas: quitá algunas.' : 'No se pudo subir una captura.'); }
+    } else {
+      const id = 'local-' + Math.random().toString(36).slice(2); localFiles.set(id, f);
+      sessionOnly.set(id0, [...(sessionOnly.get(id0)||[]), {id, nombre:f.name, seccion:sec, analizada:false}]);
+    }
+  }
+  if (selId !== id0) return;
+  aiMsg = ''; if (assets) await saveNow(); renderEditorKeepScroll(); queueAuto();
+}
+function queueAuto(){ if (!autoAI || !sample || !imgLimits) return; clearTimeout(aiTimer); setAiMsg('Analizando en un momento… (podés seguir pegando)'); aiTimer = setTimeout(() => { if (!aiBusy && pending().length) analyze(pending()); }, 1800); }
+
+/* ---------- análisis con Claude ---------- */
+const SHAPE = `{"nombre":"","objetivo":"","frecuencia":"",
+"fuentes":[{"nombre":"","tipo":"BigQuery|Google Sheets|SQL Server|CSV / archivo|Combinación|Otra","detalle":""}],
+"joins":[{"combinacion":"","izquierda":"","tipo":"Interno (inner)|Externo izquierdo (left)|Externo derecho (right)|Externo completo (full)|Cruzado (cross)","derecha":"","claves":"campo = campo"}],
+"filtros":[{"nombre":"","control":"Lista desplegable|Rango de fechas|Casilla|Búsqueda|Control deslizante|Botón|Parámetro|Otro","campo":"","valores":""}],
+"graficos":[{"pagina":"","titulo":"","tipo":"Scorecard|Barras|Columnas|Líneas|Serie temporal|Tabla|Tabla dinámica|Torta / anillo|Mapa|Dispersión|Medidor|Otro","metrica":"","dimension":"","definicion":""}],
+"calculados":[{"nombre":"","formula":"","descripcion":""}],
+"campos":[{"nombre":"","tipo":"","descripcion":""}],
+"preguntas":[""]}`;
+function buildPrompt(caps){
+  return `Sos documentador de datos de la Universidad de Flores (UFLO). Te paso capturas de un tablero de Looker Studio para armar su ficha de catálogo y alimentar el diccionario de datos. Números y nombres pueden estar tapados a propósito.
+
+Qué muestra cada imagen, en orden:
+${caps.map((c,i)=>`Imagen ${i+1}: ${SECNAME[c.seccion]}`).join('\n')}
+
+Qué extraer según la sección:
+- Páginas del tablero: cada gráfico o indicador (página, título, tipo, métrica con su agregación si se infiere, dimensión, regla o filtro propio). También el nombre y el objetivo del tablero si se deducen del título o los encabezados.
+- Filtros: cada control (nombre visible, tipo de control, campo que filtra, opciones o valores visibles, sin datos personales).
+- Fuente de datos: nombre de la fuente y su tipo; cada campo con nombre exacto y tipo; los campos calculados con su fórmula exacta, carácter por carácter.
+- Combinación (joins): cada unión entre tablas: nombre de la combinación, tabla izquierda, tipo de unión, tabla derecha y claves (campo = campo). Agregá las tablas que participan a "fuentes".
+
+Reglas:
+- Describí solo lo que se ve. No inventes. Si algo no se lee o es dudoso, dejalo vacío y agregá una pregunta concreta en "preguntas".
+- No transcribas valores numéricos, nombres de personas, DNI ni correos.
+- En los campos de opciones usá exactamente uno de los valores listados.
+- Español neutro, frases cortas.
+
+Ya cargado (no lo repitas): ${JSON.stringify({graficos:work.graficos.map(g=>g.titulo), filtros:work.filtros.map(f=>f.nombre), fuentes:work.fuentes.map(f=>f.nombre), calculados:work.calculados.map(c=>c.nombre), campos:work.campos.length+' campos'})}
+
+Respondé SOLO con un objeto JSON con esta forma (omití listas vacías):
+${SHAPE}`;
+}
+const KEYF = { graficos: x => x.pagina+'|'+x.titulo, filtros: x => x.nombre||x.campo, fuentes: x => x.nombre, joins: x => [x.combinacion,x.izquierda,x.derecha].join('|'), calculados: x => x.nombre, campos: x => x.nombre, dudas: x => x.texto };
+function merge(r){
+  if (!r || typeof r !== 'object') return 0; let n = 0;
+  for (const k of ['nombre','objetivo','frecuencia']){
+    let v = String(r[k] ?? '').trim(); const cur = String(work[k] ?? '').trim();
+    if (v && (!cur || (k==='nombre' && cur==='Tablero sin nombre'))){ work[k] = v; n++; }
+  }
+  for (const key of ARRAYS){
+    const have = new Map(work[key].map((x,i) => [KEYF[key](x).toLowerCase(), i]));
+    for (const it of (Array.isArray(r[key]) ? r[key] : [])){
+      if (!it || typeof it !== 'object') continue;
+      const o = {}; COLS[key].forEach(([k]) => o[k] = String(it[k] ?? '').trim());
+      const kk = KEYF[key](o).toLowerCase(); if (!kk.replace(/\|/g,'')) continue;
+      if (have.has(kk)){ const cur = work[key][have.get(kk)]; for (const [k] of COLS[key]) if (!String(cur[k]||'').trim() && o[k]){ cur[k] = o[k]; n++; } }
+      else { work[key].push(o); have.set(kk, work[key].length-1); n++; }
+    }
+  }
+  const pq = new Set(work.dudas.map(q => String(q.texto || '').trim().toLowerCase()));
+  for (const p of (Array.isArray(r.preguntas) ? r.preguntas : [])){
+    const s = String(p ?? '').trim(); const k = s.toLowerCase();
+    if (s && !pq.has(k)){ work.dudas.push({ texto: s, dimension: 'completitud', estado: 'abierta', nota: '' }); pq.add(k); n++; }
+  }
+  return n;
+}
+async function analyze(list){
+  if (aiBusy || !list.length || !sample || !imgLimits) return;
+  clearTimeout(aiTimer);
+  const id0 = selId; aiBusy = true; aiCtl = new AbortController(); const signal = aiCtl.signal;
+  refreshAiBar();
+  const chunks = []; for (let i = 0; i < list.length; i += imgLimits.maxCount) chunks.push(list.slice(i, i + imgLimits.maxCount));
+  let total = 0, done = 0;
+  try {
+    for (const [ci, caps] of chunks.entries()){
+      const images = [], used = [];
+      for (const c of caps){
+        let b = localFiles.get(c.id);
+        if (!b){ try { const res = await fetch('/_blob/' + c.id); if (res.ok) b = await res.blob(); } catch(_){} }
+        if (b){ images.push(b); used.push(c); }
+      }
+      if (!images.length) continue;
+      setAiMsg(`Claude está leyendo ${images.length} ${images.length===1?'captura':'capturas'}${chunks.length>1?` (tanda ${ci+1} de ${chunks.length})`:''}… suele tardar menos de un minuto.`);
+      const r = await sample.json(buildPrompt(used), { images, signal, cache:false, onText: () => setAiMsg('Escribiendo la ficha…') });
+      if (selId !== id0) return;
+      total += merge(r); done += used.length;
+      const ids = new Set(used.map(c=>c.id));
+      for (const c of allCaps()) if (ids.has(c.id)) c.analizada = true;
+      await saveNow(); aiMsg = ''; renderEditorKeepScroll();
+    }
+    setAiMsg(total ? `Listo: ${total} datos nuevos de ${done} ${done===1?'captura':'capturas'}. Revisá las tablas y las dudas antes de validar.` : 'Claude no encontró datos nuevos en estas capturas.');
+  } catch(e){
+    const msg = { cancelled:'Análisis detenido.', not_granted:'No se autorizó el uso de Claude en esta página.', rate_limited:'Demasiados pedidos seguidos. Esperá un momento y tocá “Analizar pendientes”.', image_rejected:'Alguna captura no se pudo leer. Probá con un recorte más chico.', invalid_json:'La respuesta vino incompleta. Tocá “Analizar pendientes” de nuevo.', refused:'Claude no pudo procesar estas capturas.', session_expired:'Tu sesión venció: volvé a iniciar sesión.' }[e && e.code];
+    if (selId === id0) setAiMsg(msg || 'Hubo un problema al analizar. Tocá “Analizar pendientes” para reintentar.');
+  } finally {
+    aiBusy = false; aiCtl = null; if (selId === id0){ const keep = aiMsg; refreshAiBar(); setAiMsg(keep); }
+  }
+}
+
+/* ---------- exportar ---------- */
+const cell = s => String(s ?? '').replace(/\|/g,'\\|').replace(/\n+/g,' ').trim() || '—';
+const TITLES = {fuentes:'Fuentes de datos', joins:'Combinaciones (joins)', filtros:'Filtros y controles', graficos:'Gráficos e indicadores', calculados:'Campos calculados', campos:'Campos de la fuente', dudas:'Dudas y brechas'};
+function toMarkdown(){
+  const ids = order.length ? order : [...docs.keys()];
+  let md = `# Catálogo de tableros UFLO\n\nExportado el ${new Date().toLocaleDateString('es-AR')} · ${ids.length} tableros\n`;
+  for (const id of ids){ const d = norm(docs.get(id));
+    md += `\n## ${d.nombre}\n\n- **Estado:** ${ESTADO_LABEL[d.estado]||d.estado}\n- **Área:** ${d.area||'—'}\n- **Dueño del dato:** ${d.dueno||'—'}\n- **Custodio:** ${d.custodio||'—'}\n- **Usuarios:** ${d.usuarios.join(', ')||'—'}\n- **Actualización:** ${d.frecuencia||'—'}\n- **Vigencia:** ${d.vigente_desde||'—'} → ${d.vigente_hasta||'vigente'}${d.reemplazado_por?` · reemplazado por ${d.reemplazado_por}`:''}\n${d.link?`- **Enlace:** ${d.link}\n`:''}\n**Objetivo:** ${d.objetivo||'—'}\n`;
+    for (const key of ['fuentes','joins','filtros','graficos','calculados','campos','dudas']){
+      if (!d[key].length) continue;
+      md += `\n### ${TITLES[key]}\n\n| ${COLS[key].map(c=>c[1]).join(' | ')} |\n|${COLS[key].map(()=>'---').join('|')}|\n` + d[key].map(r => `| ${COLS[key].map(([k])=>cell(r[k])).join(' | ')} |`).join('\n') + '\n';
+    }
+  }
+  return md;
+}
+function toCSV(){
+  const q = s => '"' + String(s ?? '').replace(/"/g,'""') + '"';
+  const lines = [['tablero','estado','area','dueno','usuarios','fuentes','pagina','grafico','tipo','metrica','dimension','definicion'].join(',')];
+  for (const id of (order.length?order:[...docs.keys()])){ const d = norm(docs.get(id));
+    const base = [d.nombre, d.estado, d.area, d.dueno, d.usuarios.join('; '), d.fuentes.map(f=>f.nombre).join('; ')];
+    if (!d.graficos.length) lines.push([...base,'','','','','',''].map(q).join(','));
+    for (const g of d.graficos) lines.push([...base, g.pagina, g.titulo, g.tipo, g.metrica, g.dimension, g.definicion].map(q).join(','));
+  }
+  return '﻿' + lines.join('\r\n');
+}
+async function offer(filename, data){
+  if (dirty) await saveNow();
+  if (!downloads){ setStatus('La descarga no está disponible en esta vista.'); return; }
+  try { await downloads.save({ filename, data }); setStatus('Archivo listo: ' + filename); }
+  catch(e){ if (e && e.code !== 'declined') setStatus('No se pudo generar la descarga.'); }
+}
+$('#btn-md').onclick = () => offer('catalogo_tableros_uflo.md', toMarkdown());
+$('#btn-csv').onclick = () => offer('catalogo_graficos_uflo.csv', toCSV());
+$('#btn-gov').onclick = () => { govView = !govView; $('#btn-gov')?.setAttribute('aria-pressed', govView); renderEditorKeepScroll(); };
+
+/* ---------- arranque ---------- */
+function onSnap(snap){
+  const keepLocal = selId && !snap.docs.some(d=>d.id===selId) && docs.has(selId) && dirty;
+  docs.clear(); order = snap.docs.map(d => d.id);
+  for (const d of snap.docs) docs.set(d.id, d.data());
+  if (keepLocal){ docs.set(selId, clone(work)); order.unshift(selId); }
+  if (selId && !docs.has(selId)){ selId = null; work = null; renderEditor(); }
+  else if (selId && !dirty && !aiBusy && !snap.metadata.hasPendingWrites && !ed.contains(document.activeElement)){
+    const fresh = norm(clone(docs.get(selId)));
+    if (JSON.stringify(fresh) !== JSON.stringify(work)){ work = fresh; renderEditorKeepScroll(); }
+  }
+  renderList();
+  setStatus(order.length ? 'Catálogo sincronizado. Los cambios se guardan solos.' : 'Catálogo vacío.');
+}
+renderList(); renderEditor();
+(async () => {
+  if (!window.claude || !claude.use){ setStatus('Abrí esta página en Claude para guardar el catálogo.'); return; }
+  [db, assets, sample, downloads] = await Promise.all(['db','assets','sample','downloads'].map(n => claude.use(n).catch(() => null)));
+  if (sample){ imgLimits = (await sample.limits().catch(() => null))?.images || null; }
+  if (!db){ setStatus('El almacenamiento no está disponible en esta vista: los cambios quedan solo en esta visita.'); renderEditor(); return; }
+  col = db.collection('tableros');
+  col.orderBy('actualizado','desc').onSnapshot(onSnap, () => setStatus('Se perdió la conexión con el catálogo. Recargá la página.'));
+  renderEditor();
+})();
+</script>

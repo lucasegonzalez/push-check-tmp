@@ -1,0 +1,14 @@
+{
+  "name": "catalogo-tableros-uflo-local",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Runtime local del prototipo Catálogo de tableros UFLO",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "tesseract.js": "^5.1.1",
+    "xlsx": "^0.18.5"
+  }
+}
